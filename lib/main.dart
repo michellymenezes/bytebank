@@ -15,6 +15,11 @@ class ByteBankApp extends StatelessWidget {
 }
 
 class TransferForm extends StatelessWidget {
+  // Create controllers
+  final TextEditingController _accountNumberFieldController =
+      TextEditingController();
+  final TextEditingController _valueFieldController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,29 +31,42 @@ class TransferForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: TextField(
+              // Map values
+              controller: _accountNumberFieldController,
               style: TextStyle(fontSize: 24.0),
               decoration: InputDecoration(
-                  labelText: "Account Number",
-                  hintText: "0000"
-              ),
+                  labelText: "Account Number", hintText: "0000"),
               keyboardType: TextInputType.number,
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: TextField(
+              controller: _valueFieldController,
               style: TextStyle(fontSize: 24.0),
               decoration: InputDecoration(
-                icon: Icon(Icons.monetization_on),
+                  icon: Icon(Icons.monetization_on),
                   labelText: "Value",
-                  hintText: "0.00"
-              ),
+                  hintText: "0.00"),
               keyboardType: TextInputType.number,
             ),
           ),
           RaisedButton(
             child: Text("Confirm"),
-          ),
+            onPressed: () {
+              // Parse the values
+              print("Pressed!");
+              final int accountNumber =
+                  int.tryParse(_accountNumberFieldController.text);
+              final double value = double.tryParse(_valueFieldController.text);
+
+              if (accountNumber != null && value != null) {
+                print("accountNumber $accountNumber - value $value");
+              } else {
+                print("Invalid Input");
+              }
+            },
+          )
         ],
       ),
     );
