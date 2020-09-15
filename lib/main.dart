@@ -1,4 +1,5 @@
 // import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(ByteBankApp());
@@ -22,15 +23,37 @@ class TransferForm extends StatelessWidget {
       ),
       body: Column(
         children: [
-          TextField(),
-          TextField(),
-          RaisedButton(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: TextField(
+              style: TextStyle(fontSize: 24.0),
+              decoration: InputDecoration(
+                  labelText: "Account Number",
+                  hintText: "0000"
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: TextField(
+              style: TextStyle(fontSize: 24.0),
+              decoration: InputDecoration(
+                icon: Icon(Icons.monetization_on),
+                  labelText: "Value",
+                  hintText: "0.00"
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+          RaisedButton(
+            child: Text("Confirm"),
+          ),
         ],
       ),
     );
   }
 }
-
 
 class TransferList extends StatelessWidget {
   @override
