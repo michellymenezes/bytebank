@@ -1,19 +1,15 @@
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(Column(
-      children: [
-        Text(
-          "Welcome to ByteBank!",
-          textDirection: TextDirection.ltr,
+void main() => runApp(
+      MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text("Transfers"),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+          ),
         ),
-        Text(
-          "É isso.",
-          textDirection: TextDirection.ltr,
-        ),
-        Expanded(
-            child: FittedBox(
-          fit: BoxFit.contain,
-          child: const FlutterLogo(),
-        ))
-      ],
-    ));
+      ),
+    );
