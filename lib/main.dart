@@ -61,7 +61,9 @@ class TransferForm extends StatelessWidget {
               final double value = double.tryParse(_valueFieldController.text);
 
               if (accountNumber != null && value != null) {
-                print("accountNumber $accountNumber - value $value");
+                // Creates the transfer
+                final createdTransfer = Transfer(value, accountNumber);
+                debugPrint("$createdTransfer".toString());
               } else {
                 print("Invalid Input");
               }
@@ -117,4 +119,10 @@ class Transfer {
   final int accountNumber;
 
   Transfer(this.value, this.accountNumber);
+
+  // Override toString implementation
+  @override
+  String toString() {
+    return "Transfer value: $value, Account number: $accountNumber";
+  }
 }
