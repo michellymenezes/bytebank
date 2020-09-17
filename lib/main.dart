@@ -83,19 +83,28 @@ class Editor extends StatelessWidget {
 }
 
 class TransferList extends StatelessWidget {
+  final List<Transfer> _transfers = List();
+
   @override
   Widget build(BuildContext context) {
+
+    _transfers.add(Transfer((100.0), 1001));
+    _transfers.add(Transfer((100.0), 1001));
+    _transfers.add(Transfer((100.0), 1001));
+    _transfers.add(Transfer((100.0), 1001));
+    _transfers.add(Transfer((100.0), 1001));
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Transfers"),
       ),
-      body: Column(
-        children: [
-          TransferItem(Transfer(100, 1000)),
-          TransferItem(Transfer(200, 2000)),
-          TransferItem(Transfer(300, 3000)),
-        ],
-      ),
+      body: ListView.builder(itemCount: _transfers.length,
+          itemBuilder: (context, index) {
+        final transfer = _transfers[index];
+        return TransferItem(transfer);
+          }),
+
+
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         // Add navigation future to the float button on the TransferList screen
@@ -110,6 +119,9 @@ class TransferList extends StatelessWidget {
           future.then((receivedTransfer) {
             debugPrint("End of the future expression");
             debugPrint("$receivedTransfer");
+            debugPrint("before: ${_transfers.length}");
+            _transfers.add(receivedTransfer);
+            debugPrint("after: ${_transfers.length}");
           });
         },
       ),
