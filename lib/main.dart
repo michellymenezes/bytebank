@@ -28,8 +28,16 @@ class TransferForm extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Editor(controller: _accountNumberFieldController, label: "Account Number", hint: "0000",),
-          Editor(controller: _valueFieldController, label: "Value", hint: "0.00", icon: Icons.monetization_on),
+          Editor(
+            controller: _accountNumberFieldController,
+            label: "Account Number",
+            hint: "0000",
+          ),
+          Editor(
+              controller: _valueFieldController,
+              label: "Value",
+              hint: "0.00",
+              icon: Icons.monetization_on),
           RaisedButton(
             child: Text("Confirm"),
             onPressed: () => _createTransfer(context),
@@ -57,7 +65,6 @@ class TransferForm extends StatelessWidget {
   }
 }
 
-
 class Editor extends StatelessWidget {
   final String hint;
   final String label;
@@ -71,47 +78,47 @@ class Editor extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: TextField(
-// Map values
+     // Map values
         controller: controller,
         style: TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
-            icon: icon != null ? Icon(icon) : null , labelText: label, hintText: hint),
+            icon: icon != null ? Icon(icon) : null,
+            labelText: label,
+            hintText: hint),
         keyboardType: TextInputType.number,
       ),
     );
   }
 }
 
-class TransferList extends StatelessWidget {
+class TransferList extends StatefulWidget {
   final List<Transfer> _transfers = List();
 
   @override
+  _TransferListState createState() => _TransferListState();
+}
+
+class _TransferListState extends State<TransferList> {
+  @override
   Widget build(BuildContext context) {
-
-    _transfers.add(Transfer((100.0), 1001));
-    _transfers.add(Transfer((100.0), 1001));
-    _transfers.add(Transfer((100.0), 1001));
-    _transfers.add(Transfer((100.0), 1001));
-    _transfers.add(Transfer((100.0), 1001));
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Transfers"),
       ),
-      body: ListView.builder(itemCount: _transfers.length,
+      body: ListView.builder(
+          itemCount: widget._transfers.length,
           itemBuilder: (context, index) {
-        final transfer = _transfers[index];
-        return TransferItem(transfer);
+            final transfer = widget._transfers[index];
+            return TransferItem(transfer);
           }),
-
-
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         // Add navigation future to the float button on the TransferList screen
         onPressed: () {
           final Future future = Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TransferForm(),
+            MaterialPageRoute(
+              builder: (context) => TransferForm(),
             ),
           );
 
@@ -119,9 +126,10 @@ class TransferList extends StatelessWidget {
           future.then((receivedTransfer) {
             debugPrint("End of the future expression");
             debugPrint("$receivedTransfer");
-            debugPrint("before: ${_transfers.length}");
-            _transfers.add(receivedTransfer);
-            debugPrint("after: ${_transfers.length}");
+            // Refresh screen - rerun Widget
+            setState(() {
+              widget._transfers.add(receivedTransfer);
+            });
           });
         },
       ),
