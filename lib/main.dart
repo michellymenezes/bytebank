@@ -9,7 +9,7 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TransferForm(),
+      home: TransferList(),
     );
   }
 }
@@ -32,14 +32,14 @@ class TransferForm extends StatelessWidget {
           Editor(controller: _valueFieldController, label: "Value", hint: "0.00", icon: Icons.monetization_on),
           RaisedButton(
             child: Text("Confirm"),
-            onPressed: () => _createTransfer(),
+            onPressed: () => _createTransfer(context),
           )
         ],
       ),
     );
   }
 
-  void _createTransfer() {
+  void _createTransfer(BuildContext context) {
     // Parse the values
     print("Pressed!");
     final int accountNumber = int.tryParse(_accountNumberFieldController.text);
@@ -49,6 +49,8 @@ class TransferForm extends StatelessWidget {
       // Creates the transfer
       final createdTransfer = Transfer(value, accountNumber);
       debugPrint("$createdTransfer".toString());
+      debugPrint("$createdTransfer");
+      Navigator.pop(context, createdTransfer);
     } else {
       print("Invalid Input");
     }
@@ -96,7 +98,20 @@ class TransferList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: null,
+        // Add navigation future to the float button on the TransferList screen
+        onPressed: () {
+          final Future future = Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TransferForm(),
+            ),
+          );
+
+          // Handle future value when returned
+          future.then((receivedTransfer) {
+            debugPrint("End of the future expression");
+            debugPrint("$receivedTransfer");
+          });
+        },
       ),
     );
   }
