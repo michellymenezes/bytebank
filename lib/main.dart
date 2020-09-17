@@ -28,39 +28,41 @@ class TransferForm extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Editor(_accountNumberFieldController, "Account Number", "0000", null),
-          Editor(_valueFieldController, "Value", "0.00", Icons.monetization_on),
+          Editor(controller: _accountNumberFieldController, label: "Account Number", hint: "0000",),
+          Editor(controller: _valueFieldController, label: "Value", hint: "0.00", icon: Icons.monetization_on),
           RaisedButton(
             child: Text("Confirm"),
-            onPressed: () {
-              // Parse the values
-              print("Pressed!");
-              final int accountNumber =
-                  int.tryParse(_accountNumberFieldController.text);
-              final double value = double.tryParse(_valueFieldController.text);
-
-              if (accountNumber != null && value != null) {
-                // Creates the transfer
-                final createdTransfer = Transfer(value, accountNumber);
-                debugPrint("$createdTransfer".toString());
-              } else {
-                print("Invalid Input");
-              }
-            },
+            onPressed: () => _createTransfer(),
           )
         ],
       ),
     );
   }
+
+  void _createTransfer() {
+    // Parse the values
+    print("Pressed!");
+    final int accountNumber = int.tryParse(_accountNumberFieldController.text);
+    final double value = double.tryParse(_valueFieldController.text);
+
+    if (accountNumber != null && value != null) {
+      // Creates the transfer
+      final createdTransfer = Transfer(value, accountNumber);
+      debugPrint("$createdTransfer".toString());
+    } else {
+      print("Invalid Input");
+    }
+  }
 }
 
-class Editor extends StatelessWidget {
-  final String _hint;
-  final String _label;
-  final TextEditingController _controller;
-  final IconData _icon;
 
-  const Editor(this._controller, this._label, this._hint, this._icon);
+class Editor extends StatelessWidget {
+  final String hint;
+  final String label;
+  final TextEditingController controller;
+  final IconData icon;
+
+  const Editor({this.controller, this.label, this.hint, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +70,10 @@ class Editor extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: TextField(
 // Map values
-        controller: _controller,
+        controller: controller,
         style: TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
-            icon: Icon(_icon), labelText: _label, hintText: _hint),
+            icon: icon != null ? Icon(icon) : null , labelText: label, hintText: hint),
         keyboardType: TextInputType.number,
       ),
     );
