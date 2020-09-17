@@ -26,23 +26,26 @@ class TransferForm extends StatelessWidget {
       appBar: AppBar(
         title: Text("Creating Transfers"),
       ),
-      body: Column(
-        children: [
-          Editor(
-            controller: _accountNumberFieldController,
-            label: "Account Number",
-            hint: "0000",
-          ),
-          Editor(
-              controller: _valueFieldController,
-              label: "Value",
-              hint: "0.00",
-              icon: Icons.monetization_on),
-          RaisedButton(
-            child: Text("Confirm"),
-            onPressed: () => _createTransfer(context),
-          )
-        ],
+      // Avoid hiding the button by the keyboard
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Editor(
+              controller: _accountNumberFieldController,
+              label: "Account Number",
+              hint: "0000",
+            ),
+            Editor(
+                controller: _valueFieldController,
+                label: "Value",
+                hint: "0.00",
+                icon: Icons.monetization_on),
+            RaisedButton(
+              child: Text("Confirm"),
+              onPressed: () => _createTransfer(context),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -125,11 +128,15 @@ class _TransferListState extends State<TransferList> {
           // Handle future value when returned
           future.then((receivedTransfer) {
             debugPrint("End of the future expression");
-            debugPrint("$receivedTransfer");
-            // Refresh screen - rerun Widget
-            setState(() {
-              widget._transfers.add(receivedTransfer);
-            });
+            // Check for null values
+            if (receivedTransfer != null) {
+              debugPrint("$receivedTransfer");
+              // Refresh screen - rerun Widget
+              setState(() {
+                widget._transfers.add(receivedTransfer);
+              });
+            }
+
           });
         },
       ),
