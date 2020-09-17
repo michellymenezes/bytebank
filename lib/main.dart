@@ -28,29 +28,8 @@ class TransferForm extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: TextField(
-              // Map values
-              controller: _accountNumberFieldController,
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                  labelText: "Account Number", hintText: "0000"),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: TextField(
-              controller: _valueFieldController,
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                  icon: Icon(Icons.monetization_on),
-                  labelText: "Value",
-                  hintText: "0.00"),
-              keyboardType: TextInputType.number,
-            ),
-          ),
+          Editor(_accountNumberFieldController, "Account Number", "0000", null),
+          Editor(_valueFieldController, "Value", "0.00", Icons.monetization_on),
           RaisedButton(
             child: Text("Confirm"),
             onPressed: () {
@@ -70,6 +49,30 @@ class TransferForm extends StatelessWidget {
             },
           )
         ],
+      ),
+    );
+  }
+}
+
+class Editor extends StatelessWidget {
+  final String _hint;
+  final String _label;
+  final TextEditingController _controller;
+  final IconData _icon;
+
+  const Editor(this._controller, this._label, this._hint, this._icon);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+      child: TextField(
+// Map values
+        controller: _controller,
+        style: TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+            icon: Icon(_icon), labelText: _label, hintText: _hint),
+        keyboardType: TextInputType.number,
       ),
     );
   }
