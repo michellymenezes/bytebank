@@ -9,8 +9,9 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TransferList(),
-    );
+        home: Scaffold(
+      body: TransferList(),
+    ));
   }
 }
 
@@ -22,10 +23,34 @@ class TransferForm extends StatefulWidget {
 }
 
 class _TransferFormState extends State<TransferForm> {
+  bool _isValueFieldValid = false;
+  bool _isAccountFieldValid = false;
+  bool _isValueFieldDirty = false;
+  bool _isAccountFieldDirty = false;
+
   final TextEditingController _accountNumberFieldController =
       TextEditingController();
 
   final TextEditingController _valueFieldController = TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+    _accountNumberFieldController.addListener(() => _validateFields());
+    _valueFieldController.addListener(() => _validateFields());
+  }
+
+  _validateFields() {
+    setState(() {
+      _isAccountFieldValid =
+          int.tryParse(_accountNumberFieldController.text) != null;
+      _isValueFieldValid = double.tryParse(_valueFieldController.text) != null;
+    });
+  }
+
+  bool _isFormValid() {
+    return _isValueFieldValid && _isAccountFieldValid;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +61,26 @@ class _TransferFormState extends State<TransferForm> {
       // Avoid hiding the button by the keyboard
       body: SingleChildScrollView(
         child: Column(
-          children: [
+          children: <Widget>[
             Editor(
               controller: _accountNumberFieldController,
               label: "Account Number",
               hint: "0000",
+              autofocus: true,
+              onChanged: (value) => setState(() => _isAccountFieldDirty = true),
+              hasError: _isAccountFieldDirty && !_isAccountFieldValid,
             ),
             Editor(
-                controller: _valueFieldController,
-                label: "Value",
-                hint: "0.00",
-                icon: Icons.monetization_on),
+              controller: _valueFieldController,
+              label: "Value",
+              hint: "0.00",
+              icon: Icons.monetization_on,
+              onChanged: (value) => setState(() => _isValueFieldDirty = true),
+              hasError: _isValueFieldDirty && !_isValueFieldValid,
+            ),
             RaisedButton(
               child: Text("Confirm"),
-              onPressed: () => _createTransfer(context),
+              onPressed: _isFormValid() ? () => _createTransfer(context) : null,
             )
           ],
         ),
@@ -75,7 +106,7 @@ class _TransferFormState extends State<TransferForm> {
 
     // Dispose the controllers
     @override
-    void dispose(){
+    void dispose() {
       _accountNumberFieldController.dispose();
       _valueFieldController.dispose();
       super.dispose();
@@ -88,22 +119,40 @@ class Editor extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final IconData icon;
+  final bool autofocus;
+  final bool hasError;
+  final void Function(String) onChanged;
 
-  const Editor({this.controller, this.label, this.hint, this.icon});
+  const Editor({
+    this.controller,
+    this.label,
+    this.hint,
+    this.icon,
+    this.onChanged,
+    this.autofocus = false,
+    this.hasError = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: TextField(
-     // Map values
+        // Map values
         controller: controller,
         style: TextStyle(fontSize: 24.0),
+        onChanged: onChanged,
         decoration: InputDecoration(
-            icon: icon != null ? Icon(icon) : null,
-            labelText: label,
-            hintText: hint),
+          icon: icon != null ? Icon(this.icon) : null,
+          labelText: label,
+          hintText: hint,
+          focusedBorder: new OutlineInputBorder(
+            borderSide:
+                new BorderSide(color: hasError ? Colors.red : Colors.teal),
+          ),
+        ),
         keyboardType: TextInputType.number,
+        autofocus: autofocus,
       ),
     );
   }
@@ -151,7 +200,6 @@ class _TransferListState extends State<TransferList> {
                 widget._transfers.add(receivedTransfer);
               });
             }
-
           });
         },
       ),
