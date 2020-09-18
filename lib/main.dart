@@ -14,10 +14,17 @@ class ByteBankApp extends StatelessWidget {
   }
 }
 
-class TransferForm extends StatelessWidget {
+// Convert to stateful widget
+class TransferForm extends StatefulWidget {
   // Create controllers
+  @override
+  _TransferFormState createState() => _TransferFormState();
+}
+
+class _TransferFormState extends State<TransferForm> {
   final TextEditingController _accountNumberFieldController =
       TextEditingController();
+
   final TextEditingController _valueFieldController = TextEditingController();
 
   @override
@@ -64,6 +71,14 @@ class TransferForm extends StatelessWidget {
       Navigator.pop(context, createdTransfer);
     } else {
       print("Invalid Input");
+    }
+
+    // Dispose the controllers
+    @override
+    void dispose(){
+      _accountNumberFieldController.dispose();
+      _valueFieldController.dispose();
+      super.dispose();
     }
   }
 }
