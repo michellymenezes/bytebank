@@ -9,9 +9,15 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      body: TransferList(),
-    ));
+      home: Scaffold(body: TransferList()),
+      theme: ThemeData(
+        primaryColor: Colors.green[900],
+        accentColor: Colors.blueAccent[700],
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blueAccent[700],
+          textTheme: ButtonTextTheme.primary
+        )
+      ),);
   }
 }
 
@@ -29,7 +35,7 @@ class _TransferFormState extends State<TransferForm> {
   bool _isAccountFieldDirty = false;
 
   final TextEditingController _accountNumberFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _valueFieldController = TextEditingController();
 
@@ -148,7 +154,7 @@ class Editor extends StatelessWidget {
           hintText: hint,
           focusedBorder: new OutlineInputBorder(
             borderSide:
-                new BorderSide(color: hasError ? Colors.red : Colors.teal),
+            new BorderSide(color: hasError ? Colors.red : Colors.teal),
           ),
         ),
         keyboardType: TextInputType.number,
