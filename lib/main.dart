@@ -9,15 +9,22 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TransferForm(),
+      home: TransferList(),
     );
   }
 }
 
-class TransferForm extends StatelessWidget {
+// Convert to stateful widget
+class TransferForm extends StatefulWidget {
   // Create controllers
+  @override
+  _TransferFormState createState() => _TransferFormState();
+}
+
+class _TransferFormState extends State<TransferForm> {
   final TextEditingController _accountNumberFieldController =
       TextEditingController();
+
   final TextEditingController _valueFieldController = TextEditingController();
 
   @override
@@ -26,72 +33,127 @@ class TransferForm extends StatelessWidget {
       appBar: AppBar(
         title: Text("Creating Transfers"),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: TextField(
-              // Map values
+      // Avoid hiding the button by the keyboard
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Editor(
               controller: _accountNumberFieldController,
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                  labelText: "Account Number", hintText: "0000"),
-              keyboardType: TextInputType.number,
+              label: "Account Number",
+              hint: "0000",
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: TextField(
-              controller: _valueFieldController,
-              style: TextStyle(fontSize: 24.0),
-              decoration: InputDecoration(
-                  icon: Icon(Icons.monetization_on),
-                  labelText: "Value",
-                  hintText: "0.00"),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          RaisedButton(
-            child: Text("Confirm"),
-            onPressed: () {
-              // Parse the values
-              print("Pressed!");
-              final int accountNumber =
-                  int.tryParse(_accountNumberFieldController.text);
-              final double value = double.tryParse(_valueFieldController.text);
+            Editor(
+                controller: _valueFieldController,
+                label: "Value",
+                hint: "0.00",
+                icon: Icons.monetization_on),
+            RaisedButton(
+              child: Text("Confirm"),
+              onPressed: () => _createTransfer(context),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-              if (accountNumber != null && value != null) {
-                // Creates the transfer
-                final createdTransfer = Transfer(value, accountNumber);
-                debugPrint("$createdTransfer".toString());
-              } else {
-                print("Invalid Input");
-              }
-            },
-          )
-        ],
+  void _createTransfer(BuildContext context) {
+    // Parse the values
+    print("Pressed!");
+    final int accountNumber = int.tryParse(_accountNumberFieldController.text);
+    final double value = double.tryParse(_valueFieldController.text);
+
+    if (accountNumber != null && value != null) {
+      // Creates the transfer
+      final createdTransfer = Transfer(value, accountNumber);
+      debugPrint("$createdTransfer".toString());
+      debugPrint("$createdTransfer");
+      Navigator.pop(context, createdTransfer);
+    } else {
+      print("Invalid Input");
+    }
+
+    // Dispose the controllers
+    @override
+    void dispose(){
+      _accountNumberFieldController.dispose();
+      _valueFieldController.dispose();
+      super.dispose();
+    }
+  }
+}
+
+class Editor extends StatelessWidget {
+  final String hint;
+  final String label;
+  final TextEditingController controller;
+  final IconData icon;
+
+  const Editor({this.controller, this.label, this.hint, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+      child: TextField(
+     // Map values
+        controller: controller,
+        style: TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+            icon: icon != null ? Icon(icon) : null,
+            labelText: label,
+            hintText: hint),
+        keyboardType: TextInputType.number,
       ),
     );
   }
 }
 
-class TransferList extends StatelessWidget {
+class TransferList extends StatefulWidget {
+  final List<Transfer> _transfers = List();
+
+  @override
+  _TransferListState createState() => _TransferListState();
+}
+
+class _TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Transfers"),
       ),
-      body: Column(
-        children: [
-          TransferItem(Transfer(100, 1000)),
-          TransferItem(Transfer(200, 2000)),
-          TransferItem(Transfer(300, 3000)),
-        ],
-      ),
+      body: ListView.builder(
+          itemCount: widget._transfers.length,
+          itemBuilder: (context, index) {
+            final transfer = widget._transfers[index];
+            return TransferItem(transfer);
+          }),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: null,
+        // Add navigation future to the float button on the TransferList screen
+        onPressed: () {
+          final Future future = Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TransferForm(),
+            ),
+          );
+
+          // Handle future value when returned
+          future.then((receivedTransfer) {
+            debugPrint("End of the future expression");
+            // Check for null values
+            if (receivedTransfer != null) {
+              debugPrint("$receivedTransfer");
+              // Refresh screen - rerun Widget
+              setState(() {
+                widget._transfers.add(receivedTransfer);
+              });
+            }
+
+          });
+        },
       ),
     );
   }
