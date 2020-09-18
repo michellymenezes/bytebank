@@ -2,6 +2,8 @@ import 'package:bytebank/models/transfer.dart';
 import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 
+const _transferListTitle = "Transfers";
+
 class TransferList extends StatefulWidget {
   final List<Transfer> _transfers = List();
 
@@ -14,7 +16,7 @@ class _TransferListState extends State<TransferList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Transfers"),
+        title: Text(_transferListTitle),
       ),
       body: ListView.builder(
           itemCount: widget._transfers.length,

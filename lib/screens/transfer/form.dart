@@ -3,6 +3,16 @@ import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
+const _appBarTitle = "Creating Transfers";
+
+const _labelAccountField = "Account Number";
+const _hintAccountField = "0000";
+
+const _labelValueField = "Value";
+const _hintValueField = "0.00";
+
+const _confirmButtonText = "Confirm";
+
 class TransferForm extends StatefulWidget {
   // Create controllers
   @override
@@ -43,7 +53,7 @@ class _TransferFormState extends State<TransferForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Creating Transfers"),
+        title: Text(_appBarTitle),
       ),
       // Avoid hiding the button by the keyboard
       body: SingleChildScrollView(
@@ -51,22 +61,22 @@ class _TransferFormState extends State<TransferForm> {
           children: <Widget>[
             Editor(
               controller: _accountNumberFieldController,
-              label: "Account Number",
-              hint: "0000",
+              label: _labelAccountField,
+              hint: _hintAccountField,
               autofocus: true,
               onChanged: (value) => setState(() => _isAccountFieldDirty = true),
               hasError: _isAccountFieldDirty && !_isAccountFieldValid,
             ),
             Editor(
               controller: _valueFieldController,
-              label: "Value",
-              hint: "0.00",
+              label: _labelValueField,
+              hint: _hintValueField,
               icon: Icons.monetization_on,
               onChanged: (value) => setState(() => _isValueFieldDirty = true),
               hasError: _isValueFieldDirty && !_isValueFieldValid,
             ),
             RaisedButton(
-              child: Text("Confirm"),
+              child: Text(_confirmButtonText),
               onPressed: _isFormValid() ? () => _createTransfer(context) : null,
             )
           ],
