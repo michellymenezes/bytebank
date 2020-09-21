@@ -9,7 +9,7 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Dashboard(),
+      home: ContactList(),
       theme: ThemeData(
           primaryColor: Colors.green[900],
           accentColor: Colors.blueAccent[700],
@@ -20,35 +20,21 @@ class ByteBankApp extends StatelessWidget {
   }
 }
 
-class Dashboard extends StatelessWidget {
+class ContactList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Text("Contacts"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset("images/bytebank_logo.png"),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 120,
-              width: 100,
-              color: Colors.green,
-              child: Column(
-                children: [
-                  Icon(Icons.people),
-                  Text("Contacts"),
-                ],
-              ),
+          Card(
+            child: ListTile(
+              title: Text("Martha"),
+              subtitle: Text("1000"),
             ),
-          ),
+          )
         ],
       ),
     );
