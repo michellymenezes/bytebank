@@ -1,4 +1,5 @@
 // import 'package:flutter/cupertino.dart';
+import 'package:bytebank/screens/transfer/dashboard.dart';
 import 'package:bytebank/screens/transfer/list.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ContactList(),
+      home: Dashboard(),
       theme: ThemeData(
           primaryColor: Colors.green[900],
           accentColor: Colors.blueAccent[700],
