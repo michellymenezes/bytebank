@@ -10,7 +10,7 @@ class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Dashboard(),
+      home: ContactForm(),
       theme: ThemeData(
           primaryColor: Colors.green[900],
           accentColor: Colors.blueAccent[700],
@@ -21,36 +21,33 @@ class ByteBankApp extends StatelessWidget {
   }
 }
 
-class ContactList extends StatelessWidget {
+class ContactForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contacts"),
+        title: Text("New Contact"),
       ),
-      body: ListView(
+      body: Column(
         children: [
-          Card(
-            child: ListTile(
-              title: Text(
-                "Martha",
-                style: TextStyle(
-                  fontSize: 24.0,
-                ),
-              ),
-              subtitle: Text(
-                "1000",
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Full Name",
             ),
+            style: TextStyle(fontSize: 24.0),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Account Number",
+            ),
+            style: TextStyle(fontSize: 24.0),
+            keyboardType: TextInputType.number,
+          ),
+          RaisedButton(
+            child: Text("Create"),
+            onPressed: () {},
           )
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
       ),
     );
   }
