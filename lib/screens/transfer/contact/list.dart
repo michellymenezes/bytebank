@@ -8,20 +8,40 @@ class ContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // contacts.add(Contact(1, "Martha", 123456));
-    // contacts.add(Contact(2, "Menezes", 789012));
-
-    findAll().then((value) => contacts.addAll(value));
+    findAll().then(
+      (databaseContacts) {
+        print("Contacts: ${databaseContacts}");
+        contacts.addAll(databaseContacts);
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Contacts"),
       ),
-      body: ListView.builder(
-        itemCount: contacts.length,
-        itemBuilder: (context, index) {
-          final Contact contact = contacts[index];
-          return _ContactItem(contact);
+      body: FutureBuilder(
+        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
+        builder: (context, snapshot) {
+          final List<Contact> contacts = snapshot.data;
+          if (snapshot.data != null) {
+            return ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final Contact contact = contacts[index];
+                return _ContactItem(contact);
+              },
+            );
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                Text("Loading"),
+              ],
+            ),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -49,13 +69,13 @@ class _ContactItem extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(
-          "Martha",
+          contact.name,
           style: TextStyle(
             fontSize: 24.0,
           ),
         ),
         subtitle: Text(
-          "1000",
+          contact.accountNumber.toString(),
           style: TextStyle(
             fontSize: 16.0,
           ),
