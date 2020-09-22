@@ -10,7 +10,8 @@ import 'models/contact.dart';
 void main() {
   runApp(ByteBankApp());
   // createDatabase();
-  save(Contact(4, "Martha", 123456)).then((value) => print("Saved!"));
+  // save(Contact(4, "Martha", 123456)).then((value) => print("Saved!"));
+  findAll().then((contacts) => print("${contacts}"));
 }
 
 // Represents the Application
