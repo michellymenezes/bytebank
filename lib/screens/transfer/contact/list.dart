@@ -3,7 +3,12 @@ import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/transfer/contact/form.dart';
 import 'package:flutter/material.dart';
 
-class ContactList extends StatelessWidget {
+class ContactList extends StatefulWidget {
+  @override
+  _ContactListState createState() => _ContactListState();
+}
+
+class _ContactListState extends State<ContactList> {
   final List<Contact> contacts = List();
 
   @override
@@ -63,7 +68,7 @@ class ContactList extends StatelessWidget {
                 builder: (context) => ContactForm(),
               ))
               .then((newContact) =>
-                  {print("Contact received: ${newContact.toString()}")});
+                  setState(() {}));
         },
         child: Icon(Icons.add),
       ),

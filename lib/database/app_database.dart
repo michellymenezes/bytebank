@@ -25,7 +25,8 @@ Future<int> save(Contact contact) {
     // final json = {"id": "my_id", "bar": 3};
 
     final Map<String, dynamic> contactMap = Map();
-    contactMap['id'] = contact.id;
+    // Remove id
+    // contactMap['id'] = contact.id;
     contactMap['name'] = contact.name;
     contactMap['account_number'] = contact.accountNumber;
     return db.insert('contacts', contactMap);
