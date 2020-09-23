@@ -1,8 +1,9 @@
-import 'package:bytebank/models/contact.dart';
+import 'package:bytebank/database/dao/contact_dao.dart';
 import "package:path/path.dart";
 import "package:sqflite/sqflite.dart";
 
-Future<Database> createDatabase() async {
+
+Future<Database> getDatabase() async {
   final String dbPath = await getDatabasesPath();
   final String path = join(dbPath, "bytebank.db");
   return openDatabase(
@@ -10,10 +11,7 @@ Future<Database> createDatabase() async {
     version: 1,
     onCreate: (db, version) {
       print("onCreate!");
-      db.execute('CREATE TABLE contacts('
-          'id INTEGER PRIMARY KEY, '
-          'name TEXT, '
-          'account_number INTEGER)');
+      db.execute(ContactDao.tableSql);
     },
     // onDowngrade: onDatabaseDowngradeDelete,
   );
