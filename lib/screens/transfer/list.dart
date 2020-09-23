@@ -24,31 +24,31 @@ class _TransferListState extends State<TransferList> {
             final transfer = widget._transfers[index];
             return TransferItem(transfer);
           }),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        // Add navigation future to the float button on the TransferList screen
-        onPressed: () {
-          final Future future = Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TransferForm(),
-            ),
-          );
-
-          // Handle future value when returned
-          future.then((receivedTransfer) {
-            debugPrint("End of the future expression");
-            // Check for null values
-            if (receivedTransfer != null) {
-              debugPrint("$receivedTransfer");
-              // Refresh screen - rerun Widget
-              setState(() {
-                widget._transfers.add(receivedTransfer);
-              });
-            }
-          });
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   // Add navigation future to the float button on the TransferList screen
+      //   onPressed: () {
+      //     final Future future = Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => TransferForm(),
+      //       ),
+      //     );
+      //
+      //     // Handle future value when returned
+      //     future.then((receivedTransfer) {
+      //       debugPrint("End of the future expression");
+      //       // Check for null values
+      //       if (receivedTransfer != null) {
+      //         debugPrint("$receivedTransfer");
+      //         // Refresh screen - rerun Widget
+      //         setState(() {
+      //           widget._transfers.add(receivedTransfer);
+      //         });
+      //       }
+      //     });
+      //   },
+      // ),
     );
   }
 }
