@@ -1,17 +1,14 @@
 // import 'package:flutter/cupertino.dart';
-import 'package:bytebank/database/app_database.dart';
-import 'package:bytebank/screens/transfer/contact/form.dart';
 import 'package:bytebank/screens/transfer/dashboard.dart';
-import 'package:bytebank/screens/transfer/list.dart';
 import 'package:flutter/material.dart';
-
-import 'models/contact.dart';
+import 'database/dao/contact_dao.dart';
 
 void main() {
   runApp(ByteBankApp());
   // createDatabase();
   // save(Contact(1, "Martha", 123456)).then((value) => print("Saved!"));
-  findAll().then((contacts) => print("${contacts}"));
+  final ContactDao _dao = ContactDao();
+  _dao.findAll().then((contacts) => print("${contacts}"));
 }
 
 // Represents the Application
