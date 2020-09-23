@@ -1,4 +1,3 @@
-import 'package:bytebank/main.dart';
 import 'package:flutter/material.dart';
 
 import 'contact/list.dart';
@@ -20,11 +19,22 @@ class Dashboard extends StatelessWidget {
           ),
           Row(
             children: [
-              _FeatureItem("Transfer", Icons.monetization_on),
-              _FeatureItem("Transaction Feed", Icons.description),
+              _FeatureItem(
+                "Transfer",
+                Icons.monetization_on,
+                onClick: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ContactList(),
+                  ),
+                ),
+              ),
+              _FeatureItem(
+                "Transaction Feed",
+                Icons.description,
+                onClick: () {},
+              ),
             ],
           )
-
         ],
       ),
     );
@@ -34,8 +44,9 @@ class Dashboard extends StatelessWidget {
 class _FeatureItem extends StatelessWidget {
   final String name;
   final IconData icon;
+  final Function onClick;
 
-  const _FeatureItem(this.name, this.icon);
+  const _FeatureItem(this.name, this.icon, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -47,36 +58,31 @@ class _FeatureItem extends StatelessWidget {
 
         // Use InkWell
         child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ContactList(),
+          onTap: () => onClick(),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            height: 100,
+            width: 150, // Remove the color property to apply the effect
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 24.0,
                 ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              height: 100,
-              width: 150, // Remove the color property to apply the effect
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    icon,
+                Text(
+                  name,
+                  style: TextStyle(
                     color: Colors.white,
-                    size: 24.0,
+                    fontSize: 16.00,
                   ),
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.00,
-                    ),
-                  ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
