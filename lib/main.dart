@@ -7,7 +7,7 @@ import 'http/http.dart';
 void main() {
   runApp(ByteBankApp());
 
-  findAll();
+  findAll().then((value) => print("Response Received."));
   // final ContactDao _dao = ContactDao();
   // _dao.findAll().then((contacts) => print("${contacts}"));
 }
