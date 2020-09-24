@@ -1,3 +1,4 @@
+import 'package:bytebank/components/centered_message.dart';
 import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/http/http.dart';
 import 'package:bytebank/models/transaction.dart';
@@ -33,14 +34,19 @@ class _TransferListState extends State<TransferList> {
               case ConnectionState.active:
                 break;
               case ConnectionState.done:
-                final List<Transaction> transactions = snapshot.data;
-                return ListView.builder(
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    final transaction = transactions[index];
-                    return TransactionItem(transaction);
-                  },
-                );
+                if (snapshot.hasData) {
+                  final List<Transaction> transactions = snapshot.data;
+                  return ListView.builder(
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) {
+                      final transaction = transactions[index];
+                      return TransactionItem(transaction);
+                    },
+                  );
+                } else {
+                  return CenteredMessage("No transaction found",
+                      icon: Icons.warning);
+                }
                 break;
             }
             return Text("Unkown Error");
