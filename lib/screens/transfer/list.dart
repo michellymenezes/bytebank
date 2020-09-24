@@ -1,3 +1,4 @@
+import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/http/http.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/models/transfer.dart';
@@ -15,6 +16,7 @@ class TransferList extends StatefulWidget {
 class _TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
+    findAll();
     return Scaffold(
       appBar: AppBar(
         title: Text(_transferListTitle),
@@ -26,7 +28,7 @@ class _TransferListState extends State<TransferList> {
               case ConnectionState.none:
                 break;
               case ConnectionState.waiting:
-                return Text("Waiting");
+                return Progress();
                 break;
               case ConnectionState.active:
                 break;
