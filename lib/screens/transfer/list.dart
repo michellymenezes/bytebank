@@ -1,5 +1,6 @@
+import 'package:bytebank/http/http.dart';
+import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/models/transfer.dart';
-import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 
 const _transferListTitle = "Transfers";
@@ -18,37 +19,47 @@ class _TransferListState extends State<TransferList> {
       appBar: AppBar(
         title: Text(_transferListTitle),
       ),
-      body: ListView.builder(
-          itemCount: widget._transfers.length,
-          itemBuilder: (context, index) {
-            final transfer = widget._transfers[index];
-            return TransferItem(transfer);
+      body: FutureBuilder<List<Transaction>>(
+          future: findAll(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                break;
+              case ConnectionState.waiting:
+                return Text("Waiting");
+                break;
+              case ConnectionState.active:
+                break;
+              case ConnectionState.done:
+                final List<Transaction> transactions = snapshot.data;
+                return ListView.builder(
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = transactions[index];
+                    return TransactionItem(transaction);
+                  },
+                );
+                break;
+            }
+            return Text("Unkown Error");
           }),
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.add),
-      //   // Add navigation future to the float button on the TransferList screen
-      //   onPressed: () {
-      //     final Future future = Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => TransferForm(),
-      //       ),
-      //     );
-      //
-      //     // Handle future value when returned
-      //     future.then((receivedTransfer) {
-      //       debugPrint("End of the future expression");
-      //       // Check for null values
-      //       if (receivedTransfer != null) {
-      //         debugPrint("$receivedTransfer");
-      //         // Refresh screen - rerun Widget
-      //         setState(() {
-      //           widget._transfers.add(receivedTransfer);
-      //         });
-      //       }
-      //     });
-      //   },
-      // ),
+    );
+  }
+}
+
+class TransactionItem extends StatelessWidget {
+  final Transaction _transaction;
+
+  TransactionItem(this._transaction);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: Icon(Icons.monetization_on),
+        title: Text(_transaction.value.toString()),
+        subtitle: Text(_transaction.contact.accountNumber.toString()),
+      ),
     );
   }
 }
