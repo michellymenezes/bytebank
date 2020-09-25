@@ -1,5 +1,7 @@
+import 'package:bytebank/main.dart';
 import 'package:bytebank/screens/transfer/list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'contact/list.dart';
 
@@ -10,10 +12,12 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text("Dashboard"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.lightbulb_outline),
-            onPressed: () => print("Change Theme!"),
-          )
+          Consumer<AppConfig>(builder: (context, appConfig, child) {
+            return IconButton(
+              icon: Icon(Icons.lightbulb_outline),
+              onPressed: () => appConfig.toggleDarkMode(),
+            );
+          })
         ],
       ),
       body: Column(
