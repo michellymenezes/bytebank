@@ -1,5 +1,3 @@
-import 'package:bytebank/http/http.dart';
-import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/screens/transfer/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +11,6 @@ void main() async {
       child: ByteBankApp(),
     ),
   );
-
-  save(Transaction("0", 100, Contact(0, "Martha", 123456)))
-  .then((transaction) => print("Transaction saved: ${transaction}"));
 }
 
 class AppConfig extends ChangeNotifier {

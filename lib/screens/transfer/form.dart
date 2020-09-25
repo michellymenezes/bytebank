@@ -1,12 +1,12 @@
 // Convert to stateful widget
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/http/http.dart';
+import 'package:bytebank/models/contact.dart';
+import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
 const _appBarTitle = "Creating Transfers";
-
-const _labelAccountField = "Account Number";
-const _hintAccountField = "0000";
 
 const _labelValueField = "Value";
 const _hintValueField = "0.00";
@@ -14,6 +14,10 @@ const _hintValueField = "0.00";
 const _confirmButtonText = "Confirm";
 
 class TransferForm extends StatefulWidget {
+  final Contact contact;
+
+  const TransferForm(this.contact);
+
   // Create controllers
   @override
   _TransferFormState createState() => _TransferFormState();
@@ -21,32 +25,24 @@ class TransferForm extends StatefulWidget {
 
 class _TransferFormState extends State<TransferForm> {
   bool _isValueFieldValid = false;
-  bool _isAccountFieldValid = false;
   bool _isValueFieldDirty = false;
-  bool _isAccountFieldDirty = false;
-
-  final TextEditingController _accountNumberFieldController =
-      TextEditingController();
 
   final TextEditingController _valueFieldController = TextEditingController();
 
   @override
   initState() {
     super.initState();
-    _accountNumberFieldController.addListener(() => _validateFields());
     _valueFieldController.addListener(() => _validateFields());
   }
 
   _validateFields() {
     setState(() {
-      _isAccountFieldValid =
-          int.tryParse(_accountNumberFieldController.text) != null;
       _isValueFieldValid = double.tryParse(_valueFieldController.text) != null;
     });
   }
 
   bool _isFormValid() {
-    return _isValueFieldValid && _isAccountFieldValid;
+    return _isValueFieldValid;
   }
 
   @override
@@ -59,13 +55,25 @@ class _TransferFormState extends State<TransferForm> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Editor(
-              controller: _accountNumberFieldController,
-              label: _labelAccountField,
-              hint: _hintAccountField,
-              autofocus: true,
-              onChanged: (value) => setState(() => _isAccountFieldDirty = true),
-              hasError: _isAccountFieldDirty && !_isAccountFieldValid,
+            Column(
+              children: [
+                Text(
+                  widget.contact.name,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    widget.contact.accountNumber.toString(),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
             Editor(
               controller: _valueFieldController,
@@ -88,15 +96,13 @@ class _TransferFormState extends State<TransferForm> {
   void _createTransfer(BuildContext context) {
     // Parse the values
     print("Pressed!");
-    final int accountNumber = int.tryParse(_accountNumberFieldController.text);
     final double value = double.tryParse(_valueFieldController.text);
 
-    if (accountNumber != null && value != null) {
+    if (value != null) {
       // Creates the transfer
-      final createdTransfer = Transfer(value, accountNumber);
-      debugPrint("$createdTransfer".toString());
-      debugPrint("$createdTransfer");
-      Navigator.pop(context, createdTransfer);
+      final transacation = Transaction("0", value, widget.contact);
+
+      save(transacation).then((value) => Navigator.pop(context));
     } else {
       print("Invalid Input");
     }
@@ -104,7 +110,6 @@ class _TransferFormState extends State<TransferForm> {
     // Dispose the controllers
     @override
     void dispose() {
-      _accountNumberFieldController.dispose();
       _valueFieldController.dispose();
       super.dispose();
     }
