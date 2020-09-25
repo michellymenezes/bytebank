@@ -30,6 +30,39 @@ Future<List<Transaction>> findAll() async {
   return transactions;
 }
 
+Future<Transaction> save(Transaction transaction) async {
+  final Map<String, dynamic> transactionMap = {
+    "value": transaction.value,
+    "contact": {
+      "name": transaction.contact.name,
+      "AccountNumber": transaction.contact.accountNumber
+    }
+  };
+
+  final String body = jsonEncode(transactionMap);
+
+  Client client =
+      HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
+
+  final Response response = await client.post(
+    "http://10.0.2.2:8080/transactions",
+    headers: {"Content-type": "application/json", "password": "1000"},
+    body: body,
+  );
+
+  Map<String, dynamic> json = jsonDecode(response.body);
+
+  return Transaction(
+    json["id"],
+    json["value"],
+    Contact(
+      0,
+      json["contact"]["name"],
+      json["contact"]["accountNumber"],
+    ),
+  );
+}
+
 class LoggingInterceptor implements InterceptorContract {
   @override
   Future<RequestData> interceptRequest({RequestData data}) async {
