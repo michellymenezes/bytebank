@@ -15,7 +15,7 @@ class Dashboard extends StatelessWidget {
           Consumer<AppConfig>(builder: (context, appConfig, child) {
             return IconButton(
               icon: Icon(Icons.lightbulb_outline),
-              onPressed: () => appConfig.toggleDarkMode(),
+              onPressed: () => Provider.of<AppConfig>(context, listen: false).toggleDarkMode(),
             );
           })
         ],
