@@ -1,9 +1,8 @@
 // Convert to stateful widget
 import 'package:bytebank/components/editor.dart';
-import 'package:bytebank/http/http.dart';
+import 'package:bytebank/http/transaction_webclient.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
-import 'package:bytebank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
 const _appBarTitle = "Creating Transfers";
@@ -24,6 +23,8 @@ class TransferForm extends StatefulWidget {
 }
 
 class _TransferFormState extends State<TransferForm> {
+  final TransactionWebClient _webClient = TransactionWebClient();
+
   bool _isValueFieldValid = false;
   bool _isValueFieldDirty = false;
 
@@ -93,7 +94,7 @@ class _TransferFormState extends State<TransferForm> {
     );
   }
 
-  void _createTransfer(BuildContext context) {
+  void _createTransfer(BuildContext context) async {
     // Parse the values
     print("Pressed!");
     final double value = double.tryParse(_valueFieldController.text);
@@ -102,7 +103,7 @@ class _TransferFormState extends State<TransferForm> {
       // Creates the transfer
       final transacation = Transaction("0", value, widget.contact);
 
-      save(transacation).then((value) => Navigator.pop(context));
+      await _webClient.save(transacation);
     } else {
       print("Invalid Input");
     }

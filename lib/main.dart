@@ -2,8 +2,6 @@ import 'package:bytebank/screens/transfer/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/contact.dart';
-
 void main() async {
   runApp(
     ChangeNotifierProvider(
