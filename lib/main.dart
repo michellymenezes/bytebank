@@ -6,11 +6,6 @@ import 'http/http.dart';
 
 void main() {
   runApp(ByteBankApp());
-
-  findAll().then(
-      (transactions) => print("Response Received >>>>>>>> ${transactions}"));
-  // final ContactDao _dao = ContactDao();
-  // _dao.findAll().then((contacts) => print("${contacts}"));
 }
 
 // Represents the Application
