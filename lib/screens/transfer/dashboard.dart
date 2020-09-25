@@ -1,5 +1,7 @@
+import 'package:bytebank/main.dart';
 import 'package:bytebank/screens/transfer/list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'contact/list.dart';
 
@@ -9,6 +11,14 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
+        actions: [
+          Consumer<AppConfig>(builder: (context, appConfig, child) {
+            return IconButton(
+              icon: Icon(Icons.lightbulb_outline),
+              onPressed: () => Provider.of<AppConfig>(context, listen: false).toggleDarkMode(),
+            );
+          })
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
