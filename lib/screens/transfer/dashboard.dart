@@ -9,6 +9,12 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.lightbulb_outline),
+            onPressed: () => print("Change Theme!"),
+          )
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
