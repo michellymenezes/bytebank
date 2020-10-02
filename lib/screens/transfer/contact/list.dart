@@ -2,6 +2,7 @@ import 'package:bytebank/components/progress.dart';
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/transfer/contact/form.dart';
+import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 
 class ContactList extends StatefulWidget {
@@ -11,8 +12,6 @@ class ContactList extends StatefulWidget {
 
 class _ContactListState extends State<ContactList> {
   final ContactDao _dao = ContactDao();
-
-  // final List<Contact> contacts = List();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,7 @@ class _ContactListState extends State<ContactList> {
               }
               break;
           }
-          return Text("Unkown Error");
+          return Text("Unknown Error");
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -70,6 +69,11 @@ class _ContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TransferForm(contact),
+          ),
+        ),
         title: Text(
           contact.name,
           style: TextStyle(
